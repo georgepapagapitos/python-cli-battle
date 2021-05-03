@@ -15,7 +15,7 @@ class bcolors:
 
 
 class Person:
-    def __init__(self, hp, mp, atk, defense, magic, items):
+    def __init__(self, name, hp, mp, atk, defense, magic, items):
         self.max_hp = hp
         self.hp = hp
         self.max_mp = mp
@@ -26,6 +26,7 @@ class Person:
         self.magic = magic
         self.items = items
         self.actions = ["Attack", "Magic", "Items"]
+        self.name = name
 
     def generate_dmg(self):
         return random.randrange(self.atk_low, self.atk_high)
@@ -58,21 +59,40 @@ class Person:
 
     def choose_action(self):
         i = 1
-        print("\n" + bcolors.OKBLUE + bcolors.BOLD + 'ACTIONS' + bcolors.ENDC)
+        print("\n" + "    " + bcolors.BOLD + self.name + bcolors.ENDC)
+        print(bcolors.OKBLUE + bcolors.BOLD + "    ACTIONS" + bcolors.ENDC)
         for item in self.actions:
-            print("    " + str(i) + ":", item)
+            print("        " + str(i) + ":", item)
             i += 1
 
     def choose_magic(self):
         i = 1
-        print("\n" + bcolors.OKBLUE + bcolors.BOLD + "MAGIC" + bcolors.ENDC)
+        print("\n" + bcolors.OKBLUE + bcolors.BOLD + "    MAGIC" + bcolors.ENDC)
         for spell in self.magic:
-            print("    " + str(i) + ".", spell.name, "(cost:", str(spell.cost) + ")")
+            print("        " + str(i) + ".", spell.name, "(cost:", str(spell.cost) + ")")
             i += 1
 
     def choose_item(self):
         i = 1
-        print("\n" + bcolors.OKGREEN + bcolors.BOLD + "ITEMS" + bcolors.ENDC)
+        print("\n" + bcolors.OKGREEN + bcolors.BOLD + "    ITEMS" + bcolors.ENDC)
         for item in self.items:
-            print("    " + str(i) + ".", item["item"].name, ":", item["item"].description, "(x" + str(item["quantity"]) + ")")
+            print("        " + str(i) + ".", item["item"].name, ":", item["item"].description, "(x" + str(item["quantity"]) + ")")
             i += 1
+
+    def get_stats(self):
+        hp_bar = ""
+        bar_ticks = (self.hp / self.max_hp) * 100 / 4
+
+        while bar_ticks >= 0:
+            hp_bar += "█"
+            bar_ticks -= 1
+
+        while len(hp_bar) < 25:
+            hp_bar += " "
+
+        print("                    _________________________           __________ ")
+        print(bcolors.BOLD + self.name + ":" + "     " +
+              str(self.hp) + "/" + str(self.max_hp) + "|" + bcolors.OKGREEN + hp_bar + bcolors.ENDC +
+              bcolors.BOLD + "|    " +
+              str(self.mp) + "/" + str(self.max_mp) + "|" + bcolors.OKBLUE + "██████████" + bcolors.ENDC + bcolors.BOLD + "|" +
+              bcolors.ENDC)
